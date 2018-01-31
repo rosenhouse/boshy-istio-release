@@ -1,0 +1,5 @@
+check process bosh-pilot
+  with pidfile /var/vcap/sys/run/bpm/bosh-pilot/bosh-pilot.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start bosh-pilot"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop bosh-pilot"
+  group vcap

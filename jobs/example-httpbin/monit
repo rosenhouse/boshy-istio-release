@@ -1,0 +1,5 @@
+check process example-httpbin
+  with pidfile /var/vcap/sys/run/bpm/example-httpbin/example-httpbin.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start example-httpbin"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop example-httpbin"
+  group vcap

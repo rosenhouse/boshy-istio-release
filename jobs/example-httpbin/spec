@@ -1,0 +1,13 @@
+---
+name: example-httpbin
+templates:
+  bpm.yml.erb: config/bpm.yml
+
+packages:
+- httpbin
+- golang-1.9-linux
+
+properties:
+  port:
+    description: "The port that the httpbin service will listen on"
+    default: 80

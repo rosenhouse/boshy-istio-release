@@ -1,0 +1,57 @@
+---
+name: bosh-istio
+
+releases:
+- name: istio
+  version: latest
+- name: bpm
+  version: "0.2.0"
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.2.0
+  sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
+
+instance_groups:
+- name: bosh-pilot
+  azs: [z1]
+  instances: 1
+  vm_type: minimal
+  stemcell: default
+  networks:
+  - name: default
+    static_ips:
+    - 10.244.3.125
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: bosh-pilot
+    release: istio
+    provides:
+      bosh-pilot:
+        as: bosh-pilot
+        shared: true
+    properties:
+      bosh_director:
+        ca_cert: "((bosh_director_ca_cert))"
+        client_secret: "((bosh_director_client_secret))"
+- name: bosh-envoy-standalone
+  azs: [z1]
+  instances: 1
+  vm_type: minimal
+  stemcell: default
+  networks:
+  - name: default
+  jobs:
+  - name: bpm
+    release: bpm
+  - name: bosh-envoy
+    release: istio
+
+update:
+  canaries: 1
+  max_in_flight: 2
+  canary_watch_time: 5000-60000
+  update_watch_time: 5000-60000
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest

@@ -1,0 +1,14 @@
+---
+processes:
+- name: bosh-pilot
+  executable: /var/vcap/packages/pilot/bin/pilot-discovery
+  args:
+  - discovery
+  - --configDir=/dev/null
+  - --meshConfig=/dev/null
+  - --registries=Bosh
+  env:
+    BOSH_CA_CERT: '/var/vcap/jobs/bosh-pilot/config/certs/bosh.ca.crt'
+    BOSH_CLIENT: <%= p('bosh_director.client') %>
+    BOSH_CLIENT_SECRET: <%= p('bosh_director.client_secret') %>
+    BOSH_ENVIRONMENT: <%= p('bosh_director.host') %>

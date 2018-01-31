@@ -1,0 +1,13 @@
+---
+processes:
+- name: example-httpbin
+  executable: /var/vcap/packages/httpbin/bin/go-httpbin
+  args:
+  - --port
+  - <%= p('port') %>
+  capabilities:
+  - NET_BIND_SERVICE
+  limits:
+    memory: 100M
+    processes: 10
+    open_files: 100

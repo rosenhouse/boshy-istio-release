@@ -1,0 +1,19 @@
+---
+releases:
+- name: istio
+  version: "((release_version))"
+  # runtime config release versions cannot be 'latest'
+  # http://bosh.io/docs/runtime-config.html#releases
+
+addons:
+- name: envoy-sidecar
+  jobs:
+  - name: bosh-envoy
+    release: istio
+    consumes:
+      bosh-pilot:
+        from: bosh-pilot
+        deployment: bosh-istio
+  exclude:
+    deployments:
+    - bosh-istio

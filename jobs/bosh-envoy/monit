@@ -1,0 +1,5 @@
+check process bosh-envoy
+  with pidfile /var/vcap/sys/run/bpm/bosh-envoy/bosh-envoy.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start bosh-envoy"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop bosh-envoy"
+  group vcap

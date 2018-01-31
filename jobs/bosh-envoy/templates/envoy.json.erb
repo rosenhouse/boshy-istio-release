@@ -1,0 +1,60 @@
+<%=
+
+pilots = []
+link("bosh-pilot").instances.each do |instance|
+  pilots << {"url": "tcp://#{instance.address}:8080"}
+end
+
+timeout_ms = p('pilot_connect_timeout_ms')
+
+config = {
+  "listeners": [],
+  "lds": {
+    "cluster": "pilot-lds"
+  },
+  "admin": {
+    "access_log_path": "/dev/null",
+    "address": "tcp://0.0.0.0:8001"
+  },
+  "cluster_manager": {
+    "cds": {
+      "cluster": {
+        "name": "pilot-cds",
+        "type": "static",
+        "connect_timeout_ms": timeout_ms,
+        "lb_type": "round_robin",
+        "hosts": pilots,
+      }
+    },
+    "sds": {
+      "cluster": {
+        "name": "pilot-sds",
+        "type": "static",
+        "connect_timeout_ms": timeout_ms,
+        "lb_type": "round_robin",
+        "hosts": pilots,
+      },
+      "refresh_delay_ms": 5000
+    },
+    "clusters": [
+      {
+        "name": "pilot-lds",
+        "type": "static",
+        "connect_timeout_ms": timeout_ms,
+        "lb_type": "round_robin",
+        "hosts": pilots,
+      },
+      {
+        "name": "rds",
+        "type": "static",
+        "connect_timeout_ms": timeout_ms,
+        "lb_type": "round_robin",
+        "hosts": pilots,
+      }
+    ]
+  }
+}
+config.to_json()
+
+%>
+

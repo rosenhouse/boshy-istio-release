@@ -3,4 +3,7 @@
 	url = https://github.com/cloudfoundry-incubator/copilot
 [submodule "src/istio.io/istio"]
 	path = src/istio.io/istio
-	url = https://github.com/istio/istio
+	url = https://github.com/rosenhouse/istio
+[submodule "src/github.com/mccutchen/go-httpbin"]
+	path = src/github.com/mccutchen/go-httpbin
+	url = https://github.com/mccutchen/go-httpbin

@@ -1,0 +1,15 @@
+<%
+   service_cluster = "x"
+   service_node = "sidecar~" + spec.ip + "~x~x"
+%>
+---
+processes:
+- name: bosh-envoy
+  executable: /var/vcap/packages/envoy/bin/envoy
+  hooks:
+    pre_start: /var/vcap/jobs/bosh-envoy/bin/pre-start.sh
+  args:
+  - -c /var/vcap/jobs/bosh-envoy/config/envoy.json
+  - --max-obj-name-len 100
+  - --service-cluster <%= service_cluster %>
+  - --service-node <%= service_node %>

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+dnat_cidr='<%= link('bosh-pilot').p('virtual_ip_cidr') %>'
+envoy_port=15001
+
+# flush existing rules
+# TODO: make this not a total hack
+iptables -t nat -F OUTPUT
+
+# install redirect rule
+# any traffic destined to the virtual IP block instead gets redirected to localhost on the Envoy port
+iptables -t nat -A OUTPUT -d ${dnat_cidr} -p tcp -j REDIRECT --to-port ${envoy_port}

@@ -1,0 +1,6 @@
+---
+name: httpbin
+dependencies:
+- golang-1.9-linux
+files:
+- github.com/mccutchen/go-httpbin/**/*
