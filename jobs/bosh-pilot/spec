@@ -12,6 +12,7 @@ provides:
   type: pilot
   properties:
   - virtual_ip_cidr
+  - tld
 
 properties:
   bosh_director.ca_cert:
@@ -28,3 +29,6 @@ properties:
     description: "IP address block to use for virtual IPs.  NOT CONFIGURABLE YET!"
     # TODO: make this actually configurable and shared across Pilot instances
     default: "169.254.255.0/24"
+  tld:
+    description: "top-level domain for all service names."
+    default: "boshy"
