@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"encoding/json"
@@ -17,7 +17,7 @@ type Config struct {
 	LocalIP         string    `json:"local_ip"`
 }
 
-func LoadConfig(path string) (*Config, error) {
+func Load(path string) (*Config, error) {
 	configBytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
