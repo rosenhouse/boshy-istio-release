@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -9,39 +10,83 @@ import (
 	"strings"
 )
 
-const listenersURL = "http://10.244.3.125:8080/v1/listeners/x/sidecar~10.244.3.125~x~x"
-
 func main() {
-	resp, err := http.Get(listenersURL)
+	err := mainWithErr()
 	if err != nil {
-		log.Fatalf("get listeners: %s", err)
+		log.Fatalf("%s", err)
+	}
+}
+
+func mainWithErr() error {
+	var cfgFilePath string
+	flag.StringVar(&cfgFilePath, "config", "", "path to config file")
+	flag.Parse()
+	cfg, err := LoadConfig(cfgFilePath)
+	if err != nil {
+		return fmt.Errorf("loading config: %s", err)
+	}
+
+	_, expectedCIDR, err := net.ParseCIDR(cfg.VirtualIPCIDR)
+	if err != nil {
+		return fmt.Errorf("unable to parse virtual ip cidr: %s", err)
+	}
+
+	converger := &Converger{
+		listenersURL:      getListenersURL(cfg.PilotBaseURL, cfg.LocalIP),
+		expectedDNSSuffix: cfg.TLD,
+		expectedCIDR:      expectedCIDR,
+	}
+
+	for {
+		err := converger.convergeOnce()
+		if err != nil {
+			return fmt.Errorf("converge failure: %s", err)
+		}
+	}
+}
+
+func getListenersURL(pilotBaseURL, localIP string) string {
+	const template = "%s/v1/listeners/x/sidecar~%s~x~x"
+	return fmt.Sprintf(template, pilotBaseURL, localIP)
+}
+
+type Converger struct {
+	listenersURL      string
+	expectedDNSSuffix string
+	expectedCIDR      *net.IPNet
+}
+
+func (c *Converger) convergeOnce() error {
+	resp, err := http.Get(c.listenersURL)
+	if err != nil {
+		return fmt.Errorf("get listeners: %s", err)
 	}
 	defer resp.Body.Close()
 
 	var respStruct ListenersResponse
 	err = json.NewDecoder(resp.Body).Decode(&respStruct)
 	if err != nil {
-		log.Fatalf("parsing response: %s", err)
+		return fmt.Errorf("parsing response: %s", err)
 	}
 
 	for _, listener := range respStruct.Listeners {
-		hostname, vip, err := tryInferMapping(listener)
+		hostname, vip, err := c.tryInferMapping(listener)
 		if err != nil {
-			log.Fatalf("%s", err)
+			return fmt.Errorf("try infer mapping: %s", err)
 		}
 		if hostname == "" {
 			continue
 		}
 		fmt.Printf("%s\t%s\n", vip, hostname)
 	}
+
+	return nil
 }
 
 type Hostname string
 
-const expectedDNSSuffix = ".boshy"
-
 // a terrible hack
-func tryInferMapping(listener TCPListener) (Hostname, net.IP, error) {
+func (c *Converger) tryInferMapping(listener TCPListener) (Hostname, net.IP, error) {
 	name := listener.Name
 	if len(listener.Filters) == 0 {
 		log.Printf("%s: no filters", name)
@@ -62,12 +107,17 @@ func tryInferMapping(listener TCPListener) (Hostname, net.IP, error) {
 		return "", nil, nil
 	}
 	dstIPString := route.DestinationIPList[0]
-	if !strings.HasPrefix(dstIPString, "169.254.") {
-		log.Printf("%s: wrong ip prefix", name)
-		return "", nil, nil
-	}
 	if !strings.HasSuffix(dstIPString, "/32") {
 		log.Printf("%s: wrong ip subnet mask size", name)
+		return "", nil, nil
+	}
+	vip, _, err := net.ParseCIDR(dstIPString)
+	if err != nil {
+		log.Printf("%s: unable to parse dest ip as cidr", name)
+		return "", nil, nil
+	}
+	if !c.expectedCIDR.Contains(vip) {
+		log.Printf("%s: vip not contained in expected cidr range", name)
 		return "", nil, nil
 	}
 
@@ -78,10 +128,9 @@ func tryInferMapping(listener TCPListener) (Hostname, net.IP, error) {
 		return "", nil, nil
 	}
 	hostname := strings.TrimPrefix(clusterNameParts[0], "out.")
-	if !strings.HasSuffix(hostname, expectedDNSSuffix) {
+	if !strings.HasSuffix(hostname, c.expectedDNSSuffix) {
 		return "", nil, fmt.Errorf("failed parsing DNS name from %s", listener.Name)
 	}
-	vip := net.ParseIP(strings.TrimSuffix(dstIPString, "/32"))
 	if vip == nil {
 		return "", nil, fmt.Errorf("failed parsing vip from %s", listener.Name)
 	}

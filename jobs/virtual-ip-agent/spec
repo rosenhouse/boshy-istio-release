@@ -1,0 +1,17 @@
+---
+name: virtual-ip-agent
+templates:
+  bpm.yml.erb: config/bpm.yml
+  config.json.erb: config/config.json
+
+packages:
+- virtual-ip-agent
+
+consumes:
+- name: bosh-pilot
+  type: pilot
+
+properties:
+  refresh_interval:
+    default: 10s
+    description: "Interval to refresh DNS entries"

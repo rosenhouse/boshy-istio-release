@@ -14,6 +14,12 @@ addons:
       bosh-pilot:
         from: bosh-pilot
         deployment: bosh-istio
+  - name: virtual-ip-agent
+    release: istio
+    consumes:
+      bosh-pilot:
+        from: bosh-pilot
+        deployment: bosh-istio
   exclude:
     deployments:
     - bosh-istio

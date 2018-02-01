@@ -1,0 +1,6 @@
+---
+processes:
+- name: virtual-ip-agent
+  executable: /var/vcap/packages/virtual-ip-agent/bin/virtual-ip-agent
+  args:
+  - -config=/var/vcap/jobs/virtual-ip-agent/config/config.json

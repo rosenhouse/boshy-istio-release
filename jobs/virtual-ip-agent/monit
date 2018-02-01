@@ -1,0 +1,5 @@
+check process virtual-ip-agent
+  with pidfile /var/vcap/sys/run/bpm/virtual-ip-agent/virtual-ip-agent.pid
+  start program "/var/vcap/jobs/bpm/bin/bpm start virtual-ip-agent"
+  stop program "/var/vcap/jobs/bpm/bin/bpm stop virtual-ip-agent"
+  group vcap

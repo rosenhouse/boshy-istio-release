@@ -1,0 +1,6 @@
+---
+name: virtual-ip-agent
+dependencies:
+- golang-1.9-linux
+files:
+- virtual-ip-agent/**/*
