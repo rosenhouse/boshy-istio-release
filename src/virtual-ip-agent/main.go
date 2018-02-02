@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"time"
 
 	"virtual-ip-agent/config"
-	"virtual-ip-agent/localdns"
+	"virtual-ip-agent/handlers"
 	"virtual-ip-agent/pilot"
+	"virtual-ip-agent/store"
 )
 
 func main() {
@@ -44,21 +46,25 @@ func mainWithErr() error {
 		ExpectedCIDR:      expectedCIDR,
 	}
 
-	dnsUpdater := &localdns.Updater{
-		OurTLD: cfg.TLD,
+	store := store.New()
+
+	boshDNSHandler := &handlers.BoshDNSAdapter{
+		Store: store,
 	}
 
-	for {
-		mappings, err := pilotClient.GetMappings()
-		if err != nil {
-			return fmt.Errorf("get mappings: %s", err)
-		}
+	go func() {
+		for {
+			mappings, err := pilotClient.GetMappings()
+			if err != nil {
+				log.Fatalf("get mappings: %s", err)
+			}
 
-		err = dnsUpdater.Sync(mappings)
-		if err != nil {
-			return fmt.Errorf("local dns sync: %s", err)
-		}
+			store.ReplaceAll(mappings)
 
-		time.Sleep(refreshInterval)
-	}
+			time.Sleep(refreshInterval)
+		}
+	}()
+
+	listenAddr := fmt.Sprintf("127.0.0.1:%d", cfg.ListenPort)
+	return http.ListenAndServe(listenAddr, boshDNSHandler)
 }

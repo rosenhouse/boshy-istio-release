@@ -13,6 +13,7 @@ config = {
   "tld" => pilot_link.p('tld'),
   "pilot_base_url" => pilots[0],
   "local_ip" => spec.ip,
+  "listen_port" => p('listen_port'),
 }
 
 JSON.pretty_generate(config)

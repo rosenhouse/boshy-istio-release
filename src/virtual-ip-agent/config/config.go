@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
 	"strings"
 	"time"
@@ -15,6 +16,7 @@ type Config struct {
 	TLD             string `json:"tld"`
 	PilotBaseURL    string `json:"pilot_base_url"`
 	LocalIP         string `json:"local_ip"`
+	ListenPort      int    `json:"listen_port"`
 }
 
 func Load(path string) (*Config, error) {
@@ -51,6 +53,12 @@ func Load(path string) (*Config, error) {
 	if net.ParseIP(cfg.LocalIP) == nil {
 		return nil, fmt.Errorf("invalid local_ip: %s", cfg.LocalIP)
 	}
+
+	if cfg.ListenPort < 1 {
+		return nil, fmt.Errorf("invalid listen port %d", cfg.ListenPort)
+	}
+
+	log.Printf("loaded config: %+v", cfg)
 
 	return &cfg, nil
 }

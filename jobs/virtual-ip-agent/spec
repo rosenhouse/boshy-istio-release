@@ -3,6 +3,7 @@ name: virtual-ip-agent
 templates:
   bpm.yml.erb: config/bpm.yml
   config.json.erb: config/config.json
+  handlers.json.erb: dns/handlers.json
 
 packages:
 - virtual-ip-agent
@@ -15,3 +16,6 @@ properties:
   refresh_interval:
     default: 10s
     description: "Interval to refresh DNS entries"
+  listen_port:
+    default: 8053
+    description: "Local port to be consumed by BOSH DNS"

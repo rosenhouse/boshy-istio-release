@@ -1,0 +1,14 @@
+<%=
+config = [
+  {
+    "domain" => link('bosh-pilot').p('tld') + ".",
+    "cache" => {"enabled" => false},
+    "source" => {
+      "type" => "http",
+      "url" => "http://127.0.0.1:#{p('listen_port')}",
+    }
+  }
+]
+require 'json'
+JSON.pretty_generate(config)
+%>

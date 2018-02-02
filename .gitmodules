@@ -7,3 +7,6 @@
 [submodule "src/github.com/mccutchen/go-httpbin"]
 	path = src/github.com/mccutchen/go-httpbin
 	url = https://github.com/mccutchen/go-httpbin
+[submodule "src/golang.org/x/net"]
+	path = src/golang.org/x/net
+	url = https://github.com/golang/net
