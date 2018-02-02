@@ -8,15 +8,17 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"gopkg.in/validator.v2"
 )
 
 type Config struct {
-	RefreshInterval string `json:"refresh_interval"`
-	VirtualIPCIDR   string `json:"virtual_ip_cidr"`
-	TLD             string `json:"tld"`
-	PilotBaseURL    string `json:"pilot_base_url"`
-	LocalIP         string `json:"local_ip"`
-	ListenPort      int    `json:"listen_port"`
+	RefreshInterval string `json:"refresh_interval" validate:"nonzero"`
+	VirtualIPCIDR   string `json:"virtual_ip_cidr" validate:"nonzero"`
+	TLD             string `json:"tld" validate:"nonzero"`
+	PilotBaseURL    string `json:"pilot_base_url" validate:"nonzero"`
+	LocalIP         string `json:"local_ip" validate:"nonzero"`
+	ListenPort      int    `json:"listen_port" validate:"nonzero"`
 }
 
 func Load(path string) (*Config, error) {
@@ -29,6 +31,11 @@ func Load(path string) (*Config, error) {
 	err = json.Unmarshal(configBytes, &cfg)
 	if err != nil {
 		return nil, fmt.Errorf("parsing config: %s", err)
+	}
+
+	err = validator.Validate(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("invalid config: %s", err)
 	}
 
 	// some basic sanity checks

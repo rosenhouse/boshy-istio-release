@@ -25,43 +25,40 @@ bosh update-runtime-config --var=release_version=$RELEASE_VERSION runtime-config
 ```
 
 ### deploy a bosh manifest
-this way they pick up the runtime config and will get the add-on
+it will pick up the runtime-config
 ```
 bosh -d sample-deployment deploy sample-bosh-manifest.yml
 ```
 
+
+### kick the tires
 ```
 bosh -d sample-deployment ssh apricot/3
 ```
 
-on the bosh vm, connect via a virtual-IP to a service:
+connect to a service by name and port:
 ```
-curl http://169.254.255.2:9002/headers | json_pp
+curl -v http://example-httpbin.banana.sample-deployment.boshy:9002/get
+```
+note that the name resolves to IP 169.254.255.x
+
+
+### behind the scenes
+
+observe the known hostnames:
+```
+tail -f /var/vcap/sys/log/virtual-ip-agent/*.log
 ```
 
+inspect the envoy admin endpoint
+```
+curl http://127.0.0.1:8001
+```
 
-### query pilot
-
+query the istio pilot endpoints
 ```
 export PILOT_URL=http://10.244.3.125:8080
+curl $PILOT_URL/v1/listeners/x/sidecar~10.244.0.130~x~x
+curl $PILOT_URL/v1/clusters/x/sidecar~10.244.0.130~x~x
+curl $PILOT_URL/v1/registration
 ```
-
-- LDS
-  ```
-  curl $PILOT_URL/v1/listeners/x/sidecar~10.244.0.130~x~x
-  ```
-
-- CDS
-  ```
-  curl $PILOT_URL/v1/clusters/x/sidecar~10.244.0.130~x~x
-  ```
-
-- SDS list all
-  ```
-  curl $PILOT_URL/v1/registration
-  ```
-
-- see virtual IP address assignment
-  ```
-  curl -s 10.244.3.125:8080/v1/listeners/x/sidecar~10.244.3.125~x~x | grep -C 2 169
-  ```

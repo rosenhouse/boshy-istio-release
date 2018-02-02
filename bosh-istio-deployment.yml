@@ -32,18 +32,6 @@ instance_groups:
       bosh_director:
         ca_cert: "((bosh_director_ca_cert))"
         client_secret: "((bosh_director_client_secret))"
-- name: bosh-envoy-standalone
-  azs: [z1]
-  instances: 1
-  vm_type: minimal
-  stemcell: default
-  networks:
-  - name: default
-  jobs:
-  - name: bpm
-    release: bpm
-  - name: bosh-envoy
-    release: istio
 
 update:
   canaries: 1
