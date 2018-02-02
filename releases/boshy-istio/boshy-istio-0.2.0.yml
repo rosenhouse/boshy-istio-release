@@ -1,0 +1,54 @@
+name: boshy-istio
+version: 0.2.0
+commit_hash: 3df4cfc
+uncommitted_changes: false
+jobs:
+- name: bosh-envoy
+  version: 9b5f5fef4c17903aadf05d09611583962effb7f3
+  fingerprint: 9b5f5fef4c17903aadf05d09611583962effb7f3
+  sha1: b90b9d5e7887aeca494e1b4acf26ec8e7471c06d
+- name: bosh-pilot
+  version: 23deea5d0f44b4d42d0c2309809ea0a6f47088da
+  fingerprint: 23deea5d0f44b4d42d0c2309809ea0a6f47088da
+  sha1: 4d66a2fbf2530cfec4fff3f4230faa7a3546d344
+- name: example-httpbin
+  version: 74cff27966f84502b6943d9b81fff4fda49f0e8c
+  fingerprint: 74cff27966f84502b6943d9b81fff4fda49f0e8c
+  sha1: 81e176502490e5d2bde581a14c1b0688b593bf0e
+- name: virtual-ip-agent
+  version: 5135cf98a78850e88fda90c9595c2102156e3016
+  fingerprint: 5135cf98a78850e88fda90c9595c2102156e3016
+  sha1: 624738caf036e621cd3bfe09a4dc39ea89377401
+packages:
+- name: envoy
+  version: d1f6a00c8b19d157143d3cb867e71318e53977d4
+  fingerprint: d1f6a00c8b19d157143d3cb867e71318e53977d4
+  sha1: 4ee28bf2012ecafb1c3d11d2663f2d066e5276df
+  dependencies: []
+- name: golang-1.9-linux
+  version: 200a29b129a9078cb156be44c4a792ae24f42900
+  fingerprint: 200a29b129a9078cb156be44c4a792ae24f42900
+  sha1: bacfa6a162fa7085f95df7d43e911404a3644b01
+  dependencies: []
+- name: httpbin
+  version: 18c61dc6cfef949d97149d85a8f39dc90e31888e
+  fingerprint: 18c61dc6cfef949d97149d85a8f39dc90e31888e
+  sha1: d87c494aacdedd45e4f84f1dcb5830756506f598
+  dependencies:
+  - golang-1.9-linux
+- name: pilot
+  version: f0a514c3c5a0ad7f715ea32f0662c603ebe85fab
+  fingerprint: f0a514c3c5a0ad7f715ea32f0662c603ebe85fab
+  sha1: 5b2c2d95405013ee18a3fb8f89b69b62c2ec05f5
+  dependencies:
+  - golang-1.9-linux
+- name: virtual-ip-agent
+  version: 381b07e844609158cf2d8859b795a114342de4e3
+  fingerprint: 381b07e844609158cf2d8859b795a114342de4e3
+  sha1: b6b9d436cdbf2c54d573c949403a3016d76e91c4
+  dependencies:
+  - golang-1.9-linux
+license:
+  version: 0e2527473f17fe69e7c4a61d16a9fd8e737e65f6
+  fingerprint: 0e2527473f17fe69e7c4a61d16a9fd8e737e65f6
+  sha1: a909bd9986fc1062b229413a01a581b76a64fa80
