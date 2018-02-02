@@ -1,6 +1,0 @@
----
-name: grpcurl
-
-files:
-  - grpcurl-linux/grpcurl
-

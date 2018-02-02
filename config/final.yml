@@ -1,5 +1,5 @@
 ---
-final_name: istio
+final_name: boshy-istio
 blobstore:
   provider: gcs
   options:
