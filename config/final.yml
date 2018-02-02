@@ -3,4 +3,4 @@ final_name: boshy-istio
 blobstore:
   provider: gcs
   options:
-    bucket_name: istio-release-blobs
+    bucket_name: boshy-istio-blobstore
