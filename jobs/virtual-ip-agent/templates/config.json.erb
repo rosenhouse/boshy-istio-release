@@ -1,4 +1,4 @@
-<%
+<%=
 require 'json'
 
 pilot_link = link('bosh-pilot')
@@ -8,12 +8,12 @@ pilot_link.instances.each do |instance|
 end
 
 config = {
-  "refresh_interval" => p('refresh_interval')
-  "virtual_ip_cidr" => pilot_link.p('virtual_ip_cidr')
-  "tld" => pilot_link.p('tld')
-  "pilot_base_url" => pilots[0]
-  "local_ip" => spec.ip
+  "refresh_interval" => p('refresh_interval'),
+  "virtual_ip_cidr" => pilot_link.p('virtual_ip_cidr'),
+  "tld" => pilot_link.p('tld'),
+  "pilot_base_url" => pilots[0],
+  "local_ip" => spec.ip,
 }
 
-JSON.pretty_generate(toRender)
+JSON.pretty_generate(config)
 %>

@@ -10,11 +10,11 @@ import (
 )
 
 type Config struct {
-	RefreshInterval time.Time `json:"refresh_interval"`
-	VirtualIPCIDR   string    `json:"virtual_ip_cidr"`
-	TLD             string    `json:"tld"`
-	PilotBaseURL    string    `json:"pilot_base_url"`
-	LocalIP         string    `json:"local_ip"`
+	RefreshInterval string `json:"refresh_interval"`
+	VirtualIPCIDR   string `json:"virtual_ip_cidr"`
+	TLD             string `json:"tld"`
+	PilotBaseURL    string `json:"pilot_base_url"`
+	LocalIP         string `json:"local_ip"`
 }
 
 func Load(path string) (*Config, error) {
@@ -30,8 +30,9 @@ func Load(path string) (*Config, error) {
 	}
 
 	// some basic sanity checks
-	if cfg.RefreshInterval.IsZero() {
-		return nil, fmt.Errorf("expected positive refresh interval")
+	_, err = time.ParseDuration(cfg.RefreshInterval)
+	if err != nil {
+		return nil, fmt.Errorf("parsing refresh interval: %s", err)
 	}
 
 	_, _, err = net.ParseCIDR(cfg.VirtualIPCIDR)

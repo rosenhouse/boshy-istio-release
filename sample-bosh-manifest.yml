@@ -8,6 +8,10 @@ releases:
   version: "0.2.0"
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bpm-release?v=0.2.0
   sha1: f2bd126b17b3591160f501d88d79ccf0aba1ae54
+- name: bosh-dns
+  sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
+  version: 0.2.0
 
 instance_groups:
 - name: apricot

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"virtual-ip-agent/config"
 	"virtual-ip-agent/localdns"
@@ -32,6 +33,11 @@ func mainWithErr() error {
 		return fmt.Errorf("unable to parse virtual ip cidr: %s", err)
 	}
 
+	refreshInterval, err := time.ParseDuration(cfg.RefreshInterval)
+	if err != nil {
+		return fmt.Errorf("parsing refresh interval: %s", err)
+	}
+
 	pilotClient := &pilot.Client{
 		ListenersURL:      pilot.GetListenersURL(cfg.PilotBaseURL, cfg.LocalIP),
 		ExpectedDNSSuffix: cfg.TLD,
@@ -52,5 +58,7 @@ func mainWithErr() error {
 		if err != nil {
 			return fmt.Errorf("local dns sync: %s", err)
 		}
+
+		time.Sleep(refreshInterval)
 	}
 }
