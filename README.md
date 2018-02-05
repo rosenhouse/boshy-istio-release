@@ -43,8 +43,7 @@ this will provide the Envoy proxy as a BOSH add-on for all jobs
 
 some hackery to get release version:
 ```
-RELEASE_VERSION="$(bosh int --path /releases/name=istio/version <(bosh -d bosh-istio manifest) )"
-bosh update-runtime-config --var=release_version=$RELEASE_VERSION runtime-config.yml
+bosh update-runtime-config --var=release_version=0.2.0 runtime-config.yml
 ```
 
 #### deploy a sample bosh manifest
