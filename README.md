@@ -29,9 +29,7 @@ Adds Envoy to each BOSH VM, deploys an Istio Pilot to coordinate them.
 ```
 bosh_login lite   # or otherwise target your director
 
-bosh create-release  # this will take a long time, because it runs dep ensure
-
-bosh upload-release
+bosh upload-release releases/boshy-istio/boshy-istio-0.2.0.yml
 
 # configure Istio using credentials in the BOSH_ env vars
 bosh -d bosh-istio deploy \
