@@ -2,7 +2,7 @@
 name: bosh-istio
 
 releases:
-- name: istio
+- name: boshy-istio
   version: latest
 - name: bpm
   version: "0.2.0"
@@ -23,7 +23,7 @@ instance_groups:
   - name: bpm
     release: bpm
   - name: bosh-pilot
-    release: istio
+    release: boshy-istio
     provides:
       bosh-pilot:
         as: bosh-pilot

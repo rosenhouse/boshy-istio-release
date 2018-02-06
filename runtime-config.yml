@@ -1,6 +1,6 @@
 ---
 releases:
-- name: istio
+- name: boshy-istio
   version: "((release_version))"
   # runtime config release versions cannot be 'latest'
   # http://bosh.io/docs/runtime-config.html#releases
@@ -13,7 +13,7 @@ addons:
 - name: envoy-sidecar
   jobs:
   - name: bosh-envoy
-    release: istio
+    release: boshy-istio
     consumes:
       bosh-pilot:
         from: bosh-pilot
@@ -21,7 +21,7 @@ addons:
   - name: bosh-dns
     release: bosh-dns
   - name: virtual-ip-agent
-    release: istio
+    release: boshy-istio
     consumes:
       bosh-pilot:
         from: bosh-pilot

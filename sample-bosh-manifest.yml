@@ -2,7 +2,7 @@
 name: sample-deployment
 
 releases:
-- name: istio
+- name: boshy-istio
   version: latest
 - name: bpm
   version: "0.2.0"
@@ -19,7 +19,7 @@ instance_groups:
   - name: default
   jobs:
   - name: example-httpbin
-    release: istio
+    release: boshy-istio
     properties:
       port: 9001
     expose_ports:
@@ -37,7 +37,7 @@ instance_groups:
   - name: default
   jobs:
   - name: example-httpbin
-    release: istio
+    release: boshy-istio
     properties:
       port: 9002
     expose_ports:
